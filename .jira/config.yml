@@ -5,6 +5,9 @@ deployments:
       - "production*"
       - "Production"
       - "PRODUCTION"
+      - "Prod"
+      - "PROD"
+      - "prod"
 
   deploymentGating:
     enabled: true # to enable the feature
