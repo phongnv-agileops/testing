@@ -27,7 +27,7 @@ jobs:
         uses: chrnorm/deployment-action@v2.0.7
         id: deployment
         with:
-          environment: "production"
+          environment: "Prod"
           token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Run Python Script
