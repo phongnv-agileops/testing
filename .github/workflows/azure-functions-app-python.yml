@@ -1,0 +1,43 @@
+# production-deploy.yml
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - release-production
+
+jobs:
+  deploy-production:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ github.server_url }}/${{ github.repository }}/deployments/production
+    permissions:
+      deployments: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5.3.0
+        with:
+          python-version: '3.12'
+          
+      - name: Create Deployment
+        uses: chrnorm/deployment-action@v2.0.7
+        id: deployment
+        with:
+          environment: "production"
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Run Python Script
+        run: |
+          python fibonacci.py
+
+      - name: Update deployment status (success)
+        if: success()
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          state: 'success'
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
